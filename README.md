@@ -1,4 +1,4 @@
-# 🎮 Discord Badge Spoofer
+# 🎮 zenkai • discord badge spoofer
 
 <div align="left">
 
@@ -30,7 +30,7 @@ Discord tracks game activity through an analytics endpoint at `/api/v9/science`.
 This tool simulates those exact telemetry events with configurable durations and game lists. Discord accepts them with a `204` status, updating your profile badges.
 
 > [!IMPORTANT]
-> Your Discord token and `cf_clearance` cookie are saved strictly on your local machine in `science_state.json`. Never share your state file with anyone.
+> Your Discord token is saved strictly on your local machine in `science_state.json`. Never share your state file with anyone.
 
 > [!NOTE]
 > Badges take **24 to 48 hours** to refresh on your Discord profile because Discord computes telemetry in background batches.
@@ -60,13 +60,13 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Enter your Discord account token and `cf_clearance` cookie when prompted on first launch.
+Enter your Discord account token when prompted on first launch.
 
 ---
 
 ## 🔑 Getting Your Credentials
 
-### 1. Discord Token
+### 1. Discord Token (Required)
 1. Open Discord in your web browser or desktop app.
 2. Press `Ctrl + Shift + I` (or `Cmd + Option + I` on macOS) to open Developer Tools.
 3. Switch to the **Network** tab.
@@ -74,14 +74,11 @@ Enter your Discord account token and `cf_clearance` cookie when prompted on firs
 5. In the filter box, type `/api`. Click any request (such as `messages` or `@me`).
 6. Scroll down to **Request Headers**, find `Authorization`, and copy that entire token.
 
-### 2. Cloudflare Clearance Cookie (`cf_clearance`)
-1. In the same **Network** tab, find any request sent to `discord.com` (such as `science` or `@me`).
-2. In **Request Headers**, find the `Cookie` line.
-3. Copy the `cf_clearance=...` segment (or paste the entire cookie header; the script automatically extracts the clean value).
+*(Optional)* **Cloudflare Cookie (`cf_clearance`)**: Not required for normal runs. Only needed if your network or proxy triggers a Cloudflare challenge. You can add it anytime via Option `3` (Refresh Auth).
 
-### 3. Executable Fingerprint (Optional)
-- Setting a fingerprint is optional. Playtime hours register with only your token and cookie.
-- If you want the games-played badge, test it without a fingerprint first. If badges do not appear after 2 days, use option `4` in the menu to bind a fingerprint from any 64-bit Windows game `.exe` or running process PID.
+### 2. Executable Fingerprint (Optional)
+- Setting a fingerprint is completely optional. Playtime hours and badges register with only your token.
+- If you want to bind an authentic Windows PE fingerprint, use Option `4` in the menu to bind one from any 64-bit Windows game `.exe` or running process PID.
 
 ---
 
@@ -100,7 +97,7 @@ Enter your Discord account token and `cf_clearance` cookie when prompted on firs
 | :---: | :--- | :--- |
 | `[1]` | **Claim Games Playtime Badge** | Distribute custom playtime hours across games (e.g. 10,000 hours) |
 | `[2]` | **Claim Games Variety Badge** | Mark games as played (1 min each) to inflate total games count |
-| `[3]` | **Refresh Auth** | Update `cf_clearance` cookie and grab a fresh analytics token |
+| `[3]` | **Refresh Auth** | Update token/cookie and fetch a fresh analytics token |
 | `[4]` | **Set Fingerprint** | Bind an executable fingerprint to your user ID |
 | `[5]` | **Exit** | Close the tool |
 

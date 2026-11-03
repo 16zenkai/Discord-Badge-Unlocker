@@ -388,12 +388,11 @@ def print_banner() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
     print()
     purple = "\033[38;5;141m"
-    cyan = "\033[38;5;117m"
     dim = "\033[38;5;239m"
     white = "\033[38;5;255m"
     reset = "\033[0m"
-    print(f"  {purple}Discord Badge Spoofer {dim}• {white}Playtime & Games {dim}[{cyan}v{CLIENT_VERSION}{dim}] {dim}({purple}@16zenkai{dim}){reset}")
-    print(f"  {dim}───────────────────────────────────────────────────────{reset}")
+    print(f"  {purple}zenkai {dim}• {white}discord badge spoofer{reset}")
+    print(f"  {dim}──────────────────────────────────────────{reset}")
     print()
 
 
@@ -720,7 +719,6 @@ class ScienceClient:
             "accept-language": "en-GB",
             "authorization": self.state.token,
             "content-type": "application/json",
-            "cookie": cookie_hdr,
             "origin": "https://discord.com",
             "referer": "https://discord.com/channels/@me",
             "user-agent": USER_AGENT,
@@ -729,6 +727,8 @@ class ScienceClient:
             "x-discord-timezone": "Europe/Oslo",
             "x-super-properties": self.session.super_props,
         }
+        if cookie_hdr:
+            headers["cookie"] = cookie_hdr
         if DEBUG:
             print("\n" + "=" * 72)
             print(f"POST {SCIENCE_URL} ({len(payload['events'])} events)")
@@ -838,16 +838,6 @@ class App:
             self.log.err("token", "required to run")
             return
 
-        if not self.state.has_cookie:
-            print_banner()
-            self._prompt_cookie()
-        else:
-            self.log.ok("auth", "cookie loaded")
-            time.sleep(0.3)
-        if not self.state.has_cookie:
-            self.log.err("cookie", "required to run")
-            return
-
         print_banner()
         self.log.inf("loading games...")
         time.sleep(0.3)
@@ -903,7 +893,12 @@ class App:
             time.sleep(1.0)
 
     def _refresh(self) -> None:
-        self.log.input("update cookie? [y/n]:")
+        self.log.input("update token? [y/n]:")
+        choice = input().strip().lower()
+        if choice in ("y", "yes"):
+            self._prompt_token()
+
+        self.log.input("update cookie? (optional) [y/n]:")
         choice = input().strip().lower()
         if choice in ("y", "yes"):
             self.log.input("paste fresh cookie header:")
@@ -928,8 +923,8 @@ class App:
         time.sleep(1.0)
 
     def _require_ready(self) -> bool:
-        if not self.state.has_cookie:
-            self.log.err("cookie", "not set · use option 3 to add one")
+        if not self.state.has_token:
+            self.log.err("token", "not set")
             return False
         if self.state.is_stale:
             try:
